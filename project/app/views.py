@@ -116,8 +116,5 @@ def curve_api(request, pk: int, curve_mnemonic: str):
 def tordi(request):
     return render(request, 'tordi.html')
 
-def test(request):
-    return render(request, 'test.html')
-
-def test2(request):
-    return render(request, 'test2.html')
+def parameter(request):
+    return render(request, 'parameter.html')
