@@ -1,122 +1,125 @@
-{% if messages %}
-  <div class="messages-container">
-    {% for message in messages %}
-      <div class="msg-box {{ message.tags }}">
-        <span class="msg-text">{{ message }}</span>
-        <button class="msg-close" onclick="this.parentElement.style.display='none';">&times;</button>
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Petrophysical Evaluation System{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Project Scoped CSS -->
+    <link rel="stylesheet" href="{% static 'css/project.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<div class="project-wrapper">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg project-navbar">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold" href="#">
+                Well Log Data App
+            </a>
+
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler text-white" type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#projectNavbar"
+                    aria-controls="projectNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menu Items -->
+            <div class="collapse navbar-collapse" id="projectNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logs:tordi' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logs:home' %}">Upload LAS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logs:index' %}">Read About LAS File</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="project-footer">
+        <div class="container text-center">
+            <p class="mb-1 fw-semibold">
+                Gbarabe Tordi Joseph | U2020/3065033
+            </p>
+            <p class="mb-1">
+                Supervisor: Emeka Okafor
+            </p>
+            <p class="mb-0">
+                University of Port Harcourt © 2026
+            </p>
+        </div>
+    </footer>
+
+</div>
+
 <style>
-    /* Message container */
-/* Container */
-.messages-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: auto;
-  max-width: 400px;
-  z-index: 1000;
+    /* Everything is scoped inside project-wrapper */
+.project-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f6f9;
 }
 
-/* Base style for all messages */
-.msg-box {
-  padding: 14px 18px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  font-family: Arial, sans-serif;
-  font-size: 15px;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-  animation: fadeIn 0.5s ease-in-out;
+/* Navbar */
+.project-navbar {
+    background-color: #002147;
 }
 
-/* Success */
-.msg-box.success {
-  background-color: #28a745;
+/* Fix Bootstrap toggler icon color */
+.project-navbar .navbar-toggler {
+    border-color: white;
 }
 
-/* Error */
-.msg-box.error {
-  background-color: #dc3545;
+.project-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-/* Warning */
-.msg-box.warning {
-  background-color: #ffc107;
-  color: #333;
+/* Footer */
+.project-footer {
+    margin-top: auto;
+    background-color: #002147;
+    color: white;
+    padding: 15px 0;
 }
 
-/* Info */
-.msg-box.info {
-  background-color: #17a2b8;
-}
-
-/* Close button */
-.msg-close {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-/* Fade in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Fade out animation */
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; transform: translateY(-10px); }
-}
-
-
-footer {
-      background: #1a1a1a;
-      color: #aaa;
-      text-align: center;
-      padding: 40px 20px;
-      margin-top: 60px;
-      border-top: 1px solid #333;
+/* Mobile spacing tweaks */
+@media (max-width: 576px) {
+    .project-footer p {
+        font-size: 14px;
     }
-    footer strong {
-      color: #fff;
-    }
-
-    p {
-      font-size: 1.1em;
-      margin-bottom: 20px;
-    }
+}
 
 </style>
 
-{% block content %}
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-{% endblock %}
-
-<footer>
-  <p>
-    <strong>Author:</strong> Gbarabe Tordi Joseph<br>
-    Year 4 Student, Petroleum Engineering Department<br>
-    University of Port Harcourt (UNIPORT)
-  </p>
-</footer>
-
-<script>
-  // Auto-hide after 5 seconds
-  setTimeout(function() {
-    document.querySelectorAll('.msg-box').forEach(function(msg){
-      msg.style.animation = "fadeOut 0.5s forwards";
-      setTimeout(() => msg.remove(), 500);
-    });
-  }, 5000);
-</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

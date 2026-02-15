@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
 
-{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -237,7 +235,7 @@
 </head>
 <body>
   <nav class="las-navbar">
-    <a href="#" class="las-logo">LAS File Reader</a>
+    <a href="#" class="las-logo">Well Log Data App</a>
     <ul class="las-menu" id="lasMenu">
       <li><a href="{% url 'logs:index' %}#Introduction">Introduction</a></li>
       <li><a href="{% url 'logs:index' %}#History">Historical Development of LAS Files</a></li>
@@ -465,5 +463,3 @@ RHOB.G/C3 : Bulk Density<br><br>
     });
   </script>
 
-
-{% endblock %}

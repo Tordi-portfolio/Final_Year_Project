@@ -111,3 +111,13 @@ def curve_api(request, pk: int, curve_mnemonic: str):
         "y": pd.to_numeric(series, errors="coerce").astype(float).tolist(),
     }
     return JsonResponse(data)
+
+
+def tordi(request):
+    return render(request, 'tordi.html')
+
+def test(request):
+    return render(request, 'test.html')
+
+def test2(request):
+    return render(request, 'test2.html')
