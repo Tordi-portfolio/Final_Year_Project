@@ -118,3 +118,134 @@ def tordi(request):
 
 def parameter(request):
     return render(request, 'parameter.html')
+
+
+# import your Well model from your existing app
+# from yourapp.models import Well
+
+
+def analysis_home(request):
+    result = None
+
+    if request.method == "POST":
+        # -------------------------
+        # INPUT VALUES FROM FORM
+        # -------------------------
+        rho_ma = float(request.POST.get("rho_ma"))
+        rho_f = float(request.POST.get("rho_f"))
+        rho_b = float(request.POST.get("rho_b"))
+
+        a = float(request.POST.get("a"))
+        m = float(request.POST.get("m"))
+        n = float(request.POST.get("n"))
+        rw = float(request.POST.get("rw"))
+        rt = float(request.POST.get("rt"))
+
+        C = float(request.POST.get("C"))
+        swi = float(request.POST.get("swi"))
+
+        # -------------------------
+        # CALCULATIONS
+        # -------------------------
+
+        # Porosity
+        phi = (rho_ma - rho_b) / (rho_ma - rho_f)
+
+        # Water saturation (Archie)
+        sw = ((a * rw) / ((phi ** m) * rt)) ** (1 / n) if phi > 0 else 0
+
+        # Permeability
+        perm = C * (phi ** 4) / (swi ** 2)
+
+        result = {
+            "phi": round(phi, 4),
+            "sw": round(sw, 4),
+            "perm": round(perm, 4),
+        }
+
+    return render(request, "calculate/analysis.html", {"result": result})
+
+
+
+
+from django.shortcuts import render
+
+def porosity_view(request):
+    result = None
+
+    if request.method == "POST":
+        rho_ma = float(request.POST.get("rho_ma"))
+        rho_f = float(request.POST.get("rho_f"))
+        rho_b = float(request.POST.get("rho_b"))
+
+        phi = (rho_ma - rho_b) / (rho_ma - rho_f)
+
+        result = round(phi, 4)
+
+    return render(request, "calculate/porosity.html", {"result": result})
+
+
+def sw_view(request):
+    result = None
+
+    if request.method == "POST":
+        a = float(request.POST.get("a"))
+        m = float(request.POST.get("m"))
+        n = float(request.POST.get("n"))
+        rw = float(request.POST.get("rw"))
+        rt = float(request.POST.get("rt"))
+        phi = float(request.POST.get("phi"))
+
+        sw = ((a * rw) / ((phi ** m) * rt)) ** (1 / n)
+
+        result = round(sw, 4)
+
+    return render(request, "calculate/sw.html", {"result": result})
+
+
+import math
+from django.shortcuts import render
+
+def perm_view(request):
+    result = None
+    method = None
+
+    if request.method == "POST":
+        method = request.POST.get("method")
+
+        # -------------------------
+        # EMPIRICAL METHOD
+        # -------------------------
+        if method == "empirical":
+            C = float(request.POST.get("C"))
+            phi = float(request.POST.get("phi"))
+            swi = float(request.POST.get("swi"))
+
+            if swi == 0:
+                result = "Invalid Swi (cannot be zero)"
+            else:
+                k = C * (phi ** 4) / (swi ** 2)
+                result = f"{round(k,4)} Darcy ({round(k*1000,2)} mD)"
+
+        # -------------------------
+        # DARCY METHOD
+        # -------------------------
+        elif method == "darcy":
+            d = float(request.POST.get("diameter"))
+            L = float(request.POST.get("length"))
+            Q = float(request.POST.get("flow_rate"))
+            mu = float(request.POST.get("viscosity"))
+            dP = float(request.POST.get("pressure_drop"))
+
+            A = (math.pi * d**2) / 4
+
+            if dP == 0:
+                result = "Pressure drop cannot be zero"
+            else:
+                k = (Q * mu * L) / (A * dP)
+                result = f"{round(k,5)} Darcy ({round(k*1000,2)} mD)"
+
+    return render(request, "calculate/permeability.html", {
+        "result": result,
+        "method": method
+    })
